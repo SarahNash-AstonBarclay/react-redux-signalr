@@ -9,7 +9,8 @@ const PushService = (Component) => {
     constructor (props) {
       super(props);
       this.state = {
-        notificationHub: undefined
+        notificationHub: undefined,
+        subscriptions: {}
       };
     }
 
@@ -42,14 +43,30 @@ const PushService = (Component) => {
 
     // handler for receiving push msg from server hub
     onNotificationReceived (payload) {
-      // call update method for the particular route
-      const strAction = payload.updateMethod;
-      this.props.actions[strAction];
+      // payload contains endpoint that client is subscribed to, and needs to be refreshed
+      const route = payload.route;
+      
+      // invoke refresh method associated with the route
+      const subscription = this.state.subscriptions[route]
     }
 
     // receive messages from child components regarding their subscription
     componentSubscriptionCallback (subscription) {
+      // send action that posts msg to server
       this.props.actions.modifySubscription(subscription);
+
+      // track subscriptions in local state obj
+      const subscriptions = this.state.subscriptions;
+      const subscriptionOld = subscriptions[subsription.route];
+      if (subscriptionOld ) {
+        if (subscription.subscribe) {
+            subscriptions[subscription.route] = subscription;
+            this.setState({ subscriptions });
+        } else {
+          subscriptions[subscription.route] = null;
+          this.setState({ subscriptions });
+        }
+      }
     }
 
     render () {

@@ -8,11 +8,12 @@ export class Weather extends React.Component {
     return {
       subscribe: isSubscribe,
       route: 'api/temps',
-      updateMethod: 'getTemps'
+      updateMethod: this.actions.getTemps
     };
   }
 
   componentDidMount () {
+    this.actions.getTemps();
     this.context.changeSubscription({
       ...Weather.subscription(true)
     });

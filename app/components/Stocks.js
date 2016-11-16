@@ -9,11 +9,12 @@ export class Stocks extends React.Component {
     return {
       subscribe: isSubscribe,
       route: 'api/stocks',
-      updateMethod: 'getStocks'
+      updateMethod: this.actions.getStocks
     };
   }
 
   componentDidMount () {
+    this.actions.getStocks();
     this.context.changeSubscription({
       ...Stocks.subscription(true)
     });

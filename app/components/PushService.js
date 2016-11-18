@@ -9,9 +9,9 @@ const PushService = (Component) => {
     constructor (props) {
       super(props);
       this.state = {
-        notificationHub: undefined,
-        subscriptions: {}
+        notificationHub: undefined
       };
+      this._subscriptions = new Map();
     }
 
     getChildContext () {
@@ -55,17 +55,10 @@ const PushService = (Component) => {
       // send action that posts msg to server
       this.props.actions.modifySubscription(subscription);
 
-      // track subscriptions in local state obj
-      const subscriptions = this.state.subscriptions;
-      const subscriptionOld = subscriptions[subsription.route];
-      if (subscriptionOld ) {
-        if (subscription.subscribe) {
-            subscriptions[subscription.route] = subscription;
-            this.setState({ subscriptions });
-        } else {
-          subscriptions[subscription.route] = null;
-          this.setState({ subscriptions });
-        }
+      if (subscription.subscribe && !this._subscriptions.has(subscription.route)){
+        this._subscriptions.set(subscription.route, subscription.updateMethod)
+      } else {
+        this._subscriptions.delete(subscribe.route);
       }
     }
 

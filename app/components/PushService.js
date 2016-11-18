@@ -47,7 +47,8 @@ const PushService = (Component) => {
       const route = payload.route;
       
       // invoke refresh method associated with the route
-      const subscription = this.state.subscriptions[route]
+      const updateMethod = this._subscriptions.get(route);
+      updateMethod();
     }
 
     // receive messages from child components regarding their subscription
